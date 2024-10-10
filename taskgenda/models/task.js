@@ -24,5 +24,5 @@ const taskSchema = new Schema({
   }
 });
 
-const Task = mongoose.model('Task', taskSchema);
+const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 export default Task;

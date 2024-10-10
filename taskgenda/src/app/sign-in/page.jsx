@@ -18,7 +18,7 @@ function LogInPage() {
     const router = useRouter()
 
     if(session){
-        router.replace('/welcome')
+        router.push('/welcome')
     }
 
     const handleSubmit = async (e) => {

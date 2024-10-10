@@ -24,6 +24,9 @@ function Navbar({session}) {
                         <li className='mx-3 flex-col'>
                             <a href='/welcome' className='bg-grey-500 text-white rounded-md border py-2 px-3 text-lg my-2 hover:cursor-pointer'>Profile</a>
                         </li>
+                        <li className='mx-3 flex-col'>
+                            <a href='/tasks' className='bg-grey-500 text-white rounded-md border py-2 px-3 text-lg my-2 hover:cursor-pointer'>Tasks</a>
+                        </li>
                         <li className='mx-3'>
                             <a onClick={() => signOut()} className='bg-red-500 text-white rounded-md border py-2 px-3 text-lg my-2 hover:cursor-pointer'>Sign Out</a>
                         </li>    

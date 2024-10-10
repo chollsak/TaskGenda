@@ -21,7 +21,6 @@ function WelcomePage() {
         <div className='container mx-auto'>
             <h5 className='text-3xl my-3'>Welcome, {session?.user?.name}</h5>
             <p>Email: {session?.user?.email}</p>
-            <p>Tasks: </p>
             <hr className='my-3'/>
             <p>Hello World</p>
         </div>
