@@ -52,21 +52,51 @@ function TasksPage() {
     }
   }, [session?.user?.email, status]);
 
+
+  const handleDelete = async (taskId) => {
+
+    try {
+
+      if(!confirm(`Are u sure to delete task id : ${taskId}`)){
+        return 
+      }
+
+      const resDelete = await fetch(`http://localhost:3000/api/user?taskId=${taskId}`,{
+        method: 'DELETE',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+
+      if(!resDelete){
+        throw new Error('Failed to delete task')
+      }
+
+      // Update the tasks state after deletion
+      setTasks(tasks.filter((task) => task._id !== taskId));
+      alert(`Task id : ${taskId} deleted!!`)
+
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+
+  }
+
   return (
     <div>
       {/* Navbar is always visible */}
       <Navbar session={session} />
 
       <div className="container mx-auto">
-      <div className='flex justify-between'>
-      <h3 className="text-2xl font-bold my-4">Your Tasks</h3>
-        <button
-          onClick={() => router.push('/add-task')}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-        >
-          Add New Task
-        </button>
-      </div>
+        <div className='flex justify-between'>
+          <h3 className="text-2xl font-bold my-4">Your Tasks</h3>
+          <button
+            onClick={() => {router.push('/add-task')}}
+            className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
+          >
+            Add New Task
+          </button>
+        </div>
 
         {/* Display loading message */}
         {loading ? (
@@ -78,12 +108,21 @@ function TasksPage() {
           /* Display tasks if they exist */
           <ul>
             {tasks.map((task) => (
-              <li key={task._id} className="border-b py-2">
-                <h4 className="font-semibold">{task.name}</h4>
-                <p>{task.description}</p>
-                <p>Status: {task.status}</p>
-                <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
-              </li>
+              <div className='flex justify-between'>
+                <li key={task._id} className="border-b w-full py-2">
+                  <h4 className="font-semibold">{task.name}<span className='text-sm'> ({task._id})</span></h4>
+                  <p>{task.description}</p>
+                  <p>Status: {task.status}</p>
+                  <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
+                </li>
+                <button
+                  onClick={() => handleDelete(task._id)}
+                  className="p-2 mt-5 mb-14 bg-red-500 text-white rounded-md"
+                >
+                  Delete
+                </button>
+              </div>
+
             ))}
           </ul>
         ) : (

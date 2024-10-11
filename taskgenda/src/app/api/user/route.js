@@ -3,6 +3,8 @@
 import User from "../../../../models/user";
 import Task from "../../../../models/task";
 import { connectMongoDB } from "../../../../lib/mongodb";
+import { error } from "console";
+import { headers } from "next/headers";
 
 export async function GET(req) {
   try {
@@ -79,6 +81,43 @@ export async function PUT(req) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
+  } catch (error) {
+    return new Response(JSON.stringify({ success: false, error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    
+    await connectMongoDB()
+    const {searchParams} = new URL(req.url)
+    const taskId = searchParams.get('taskId')
+    console.log(taskId + ' id')
+
+    if(!taskId){
+      return new Response(JSON.stringify({success: false, msg: 'Task ID is required'}, {status: 400}))
+    }
+
+    const deleteTask = await Task.findByIdAndDelete(taskId)
+
+    if(!deleteTask){
+      return new Response(JSON.stringify({
+        success: false,
+        msg: 'Task not found'
+      }, 
+    {status: 404}))
+    }
+
+    return new Response(JSON.stringify({success: 'true', msg: `Task ID : ${deleteTask} deleted!`}, {
+      staus: 200,
+      headers: {'Content-Type' : 'application/json'}
+    }))
+
+
+
   } catch (error) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
       status: 500,
