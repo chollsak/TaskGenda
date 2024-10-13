@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
+import Link from 'next/link';
 
 function TasksPage() {
   const { data: session, status } = useSession();
@@ -82,6 +83,10 @@ function TasksPage() {
 
   }
 
+  const handleTaskClick = (taskId) => {
+    router.push(`/task-detail/${taskId}`)
+  }
+
   return (
     <div>
       {/* Navbar is always visible */}
@@ -92,7 +97,7 @@ function TasksPage() {
           <h3 className="text-2xl font-bold my-4">Your Tasks</h3>
           <button
             onClick={() => {router.push('/add-task')}}
-            className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
+            className="my-2 px-2 py-2 bg-green-500 text-white rounded-md"
           >
             Add New Task
           </button>
@@ -110,10 +115,12 @@ function TasksPage() {
             {tasks.map((task) => (
               <div className='flex justify-between'>
                 <li key={task._id} className="border-b w-full py-2">
-                  <h4 className="font-semibold">{task.name}<span className='text-sm'> ({task._id})</span></h4>
-                  <p>{task.description}</p>
-                  <p>Status: {task.status}</p>
-                  <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
+                  <div onClick={() => {handleTaskClick(task._id)}}>
+                    <h4 className="font-semibold hover:cursor-pointer hover:underline">{task.name}<span className='text-sm'> ({task._id})</span></h4>
+                  </div>
+                    <p>{task.description}</p>
+                    <p>Status: {task.status}</p>
+                    <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
                 </li>
                 <button
                   onClick={() => handleDelete(task._id)}
