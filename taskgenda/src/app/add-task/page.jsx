@@ -100,7 +100,6 @@ function AddTaskPage() {
             >
               <option value="in process">In Process</option>
               <option value="success">Success</option>
-              <option value="done">Done</option>
             </select>
           </div>
 

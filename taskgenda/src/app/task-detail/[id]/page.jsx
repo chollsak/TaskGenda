@@ -86,7 +86,7 @@ function TaskDetailPage() {
         };
 
         try {
-            const resUpdate = await fetch(`http://localhost:3000/api/task?taskId=${taskId}`, {
+            const resUpdate = await fetch(`/api/task?taskId=${taskId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'

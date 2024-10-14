@@ -35,7 +35,7 @@ function RegisterPage() {
 
     try {
 
-      const resCheckUser = await fetch('http://localhost:3000/api/checkUser', {
+      const resCheckUser = await fetch('/api/checkUser', {
         method: 'POST',
         headers:{
           'Content-Type' : 'application/json'

@@ -62,7 +62,7 @@ function TasksPage() {
         return
       }
 
-      const resDelete = await fetch(`http://localhost:3000/api/task?taskId=${taskId}`, {
+      const resDelete = await fetch(`/api/task?taskId=${taskId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
