@@ -58,18 +58,18 @@ function TasksPage() {
 
     try {
 
-      if(!confirm(`Are u sure to delete task id : ${taskId}`)){
-        return 
+      if (!confirm(`Are u sure to delete task id : ${taskId}`)) {
+        return
       }
 
-      const resDelete = await fetch(`http://localhost:3000/api/user?taskId=${taskId}`,{
+      const resDelete = await fetch(`http://localhost:3000/api/task?taskId=${taskId}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type' : 'application/json'
+          'Content-Type': 'application/json'
         }
       })
 
-      if(!resDelete){
+      if (!resDelete) {
         throw new Error('Failed to delete task')
       }
 
@@ -88,7 +88,7 @@ function TasksPage() {
   }
 
   return (
-    <div>
+    <div className='mb-8'>
       {/* Navbar is always visible */}
       <Navbar session={session} />
 
@@ -96,7 +96,7 @@ function TasksPage() {
         <div className='flex justify-between'>
           <h3 className="text-2xl font-bold my-4">Your Tasks</h3>
           <button
-            onClick={() => {router.push('/add-task')}}
+            onClick={() => { router.push('/add-task') }}
             className="my-2 px-2 py-2 bg-green-500 text-white rounded-md"
           >
             Add New Task
@@ -115,12 +115,14 @@ function TasksPage() {
             {tasks.map((task) => (
               <div className='flex justify-between'>
                 <li key={task._id} className="border-b w-full py-2">
-                  <div onClick={() => {handleTaskClick(task._id)}}>
+                  <div onClick={() => { handleTaskClick(task._id) }}>
                     <h4 className="font-semibold hover:cursor-pointer hover:underline">{task.name}<span className='text-sm'> ({task._id})</span></h4>
                   </div>
-                    <p>{task.description}</p>
-                    <p>Status: {task.status}</p>
-                    <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
+                  <p>{task.description}</p>
+                  <p>Status: {task.status}</p>
+                  <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
+                  <p>Due Date: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</p>
+
                 </li>
                 <button
                   onClick={() => handleDelete(task._id)}

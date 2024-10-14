@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import Navbar from '../../components/Navbar'
-import { useRouter } from 'next/navigation'
+import Navbar from '../../components/Navbar';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation'
+import { useParams } from 'next/navigation';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { Modal, Box, TextField, Button } from '@mui/material';
-import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Select, MenuItem, FormControl } from '@mui/material';
 
 // Fetch task data
 async function fetchData(id) {
@@ -23,11 +23,11 @@ async function fetchData(id) {
             throw new Error('Failed to fetch task');
         }
 
-        const data = await res.json(); // Corrected: parsing the response body as JSON
+        const data = await res.json();
         return data;
 
     } catch (error) {
-        return { success: false, msg: error.message }; // Return a consistent error object
+        return { success: false, msg: error.message };
     }
 }
 
@@ -42,29 +42,28 @@ function TaskDetailPage() {
         name: '',
         description: '',
         status: '',
-    }); // State for form data
+        dueDate: '',  // Added dueDate in the state
+    });
 
     // Fetch task data when the component mounts
     useEffect(() => {
         if (id) {
             fetchData(id).then((data) => {
                 if (data.success) {
-                    setTask(data.task); // Store task data if the fetch was successful
-                    // Initialize updatedTask with fetched task data
+                    setTask(data.task);
                     setUpdatedTask({
                         name: data.task.name,
                         description: data.task.description,
                         status: data.task.status,
+                        dueDate: data.task.dueDate ? new Date(data.task.dueDate).toISOString().split('T')[0] : '', // Format dueDate for date input
                     });
                 } else {
                     console.error(data.msg);
                 }
-                setLoading(false); // Stop loading once data is fetched
+                setLoading(false);
             });
         }
     }, [id]);
-    
-    
 
     // Handle opening and closing of the modal
     const handleOpenModal = () => setOpenModal(true);
@@ -79,11 +78,11 @@ function TaskDetailPage() {
     };
 
     const handleSubmit = async (taskId) => {
-        // If the user leaves any field empty, fallback to the original task data
         const updatedData = {
-            name: updatedTask.name || task.name, // If empty, use original task name
-            description: updatedTask.description || task.description, // If empty, use original task description
-            status: updatedTask.status || task.status // If empty, use original task status
+            name: updatedTask.name || task.name,
+            description: updatedTask.description || task.description,
+            status: updatedTask.status || task.status,
+            dueDate: updatedTask.dueDate || task.dueDate // Include dueDate in the updated data
         };
 
         try {
@@ -92,7 +91,7 @@ function TaskDetailPage() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(updatedData), // Send the updated data
+                body: JSON.stringify(updatedData),
             });
 
             if (!resUpdate.ok) {
@@ -100,19 +99,17 @@ function TaskDetailPage() {
             }
 
             alert(`Task id: ${taskId} updated!!`);
-            router.push('/tasks')
+            router.push('/tasks');
 
         } catch (error) {
             console.error('Error updating task:', error);
         }
 
-        handleCloseModal(); // Close the modal after submission
+        handleCloseModal();
     };
 
-
-
     if (loading) {
-        return <div>Loading...</div>; // Show a loading state
+        return <div>Loading...</div>;
     }
 
     return (
@@ -120,7 +117,7 @@ function TaskDetailPage() {
             <Navbar session={session} />
             <div className='container mx-auto mt-3'>
                 <div className='flex justify-between'>
-                    <h1>Task Details for : {id}</h1>
+                    <h1>Task Details for: {id}</h1>
                     <div className='flex items-center' onClick={handleOpenModal}>
                         <EditNoteIcon className='mr-1' />
                         <p className='hover:underline hover:cursor-pointer'>Edit Task</p>
@@ -129,16 +126,10 @@ function TaskDetailPage() {
                 {task ? (
                     <div>
                         <h2>{updatedTask.name || task.name}</h2>
-                        {/* Display `updatedTask.name` if available, else fallback to `task.name` */}
-
                         <p className='whitespace-pre-line'>{updatedTask.description || task.description}</p>
-                        {/* Display `updatedTask.description` if available, else fallback to `task.description` */}
-
                         <p>{task.dateCreated}</p>
-                        {/* No need for `updatedTask` here since `dateCreated` should be fixed */}
-
+                        <p>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</p>
                         <p>{updatedTask.status || task.status}</p>
-                        {/* Display `updatedTask.status` if available, else fallback to `task.status` */}
                     </div>
                 ) : (
                     <p>Task not found.</p>
@@ -170,7 +161,7 @@ function TaskDetailPage() {
                             fullWidth
                             label="Name"
                             name="name"
-                            value={updatedTask.name || ''} // Ensuring empty string if value is undefined
+                            value={updatedTask.name || ''}
                             onChange={handleChange}
                             margin="normal"
                         />
@@ -179,18 +170,28 @@ function TaskDetailPage() {
                             fullWidth
                             label="Description"
                             name="description"
-                            value={updatedTask.description || ''} // Ensuring empty string if value is undefined
+                            value={updatedTask.description || ''}
                             onChange={handleChange}
                             margin="normal"
                             multiline
                             rows={4}
                         />
 
-                        <p>status</p>
+                        <TextField
+                            fullWidth
+                            label="Due Date"
+                            type="date" // This makes it a date picker
+                            name="dueDate"
+                            value={updatedTask.dueDate || ''}
+                            onChange={handleChange}
+                            margin="normal"
+                        />
+
+                        <p>Status</p>
 
                         <Select
                             name="status"
-                            value={updatedTask.status || ''} // Ensuring empty string if value is undefined
+                            value={updatedTask.status || ''}
                             onChange={handleChange}
                             className='mt-4'
                         >
@@ -209,8 +210,6 @@ function TaskDetailPage() {
                     </FormControl>
                 </Box>
             </Modal>
-
-
         </div>
     );
 }

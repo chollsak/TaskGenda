@@ -13,6 +13,7 @@ function AddTaskPage() {
     description: '',
     status: 'in process',
     dateCreated: new Date().toISOString(),
+    dueDate: '', // Added dueDate state
   });
   const [error, setError] = useState(null);
 
@@ -22,32 +23,40 @@ function AddTaskPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const userEmail = session?.user?.email;
       if (!userEmail) {
         throw new Error('No user email found.');
       }
-
-      const res = await fetch('/api/user', {
+  
+      const taskWithCorrectDueDate = {
+        ...task,
+        dueDate: task.dueDate === '' ? null : task.dueDate,  // Convert empty string to null
+      };
+  
+      // Log the task data to check dueDate
+      console.log("Task being submitted:", taskWithCorrectDueDate);
+  
+      const res = await fetch('/api/task', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: userEmail, task }),
+        body: JSON.stringify({ email: userEmail, task: taskWithCorrectDueDate }),
       });
-
+  
       if (!res.ok) {
         throw new Error('Failed to add task');
       }
-
-      // Navigate back to tasks page after successful addition
+  
       router.push('/tasks');
     } catch (err) {
       console.error('Error adding task:', err);
       setError(err.message);
     }
   };
+  
 
   return (
     <div>
@@ -93,6 +102,17 @@ function AddTaskPage() {
               <option value="success">Success</option>
               <option value="done">Done</option>
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium">Due Date</label>
+            <input
+              type="date"
+              name="dueDate"
+              value={task.dueDate}
+              onChange={handleInputChange}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            />
           </div>
 
           <button

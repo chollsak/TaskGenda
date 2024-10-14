@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import { type } from "os";
 
 const taskSchema = new Schema({
   name: {
@@ -15,6 +16,11 @@ const taskSchema = new Schema({
     type: Date,
     required: true,
     default: Date.now // Use Date.now to get the current timestamp
+  },
+  dueDate:{
+    type: Date,
+    require: true,
+    default: null
   },
   status: {
     type: String,
