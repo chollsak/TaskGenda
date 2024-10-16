@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Link from 'next/link';
+import LoadingComponent from '../components/Loading';
 
 function TasksPage() {
   const { data: session, status } = useSession();
@@ -114,7 +115,7 @@ function TasksPage() {
 
         {/* Display loading message */}
         {loading ? (
-          <p>Loading tasks...</p>
+          <div><LoadingComponent /></div>
         ) : error ? (
           /* Display error message if there is an error */
           <p>Error loading tasks: {error}</p>
