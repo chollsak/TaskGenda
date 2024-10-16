@@ -4,10 +4,12 @@ import { signOut } from 'next-auth/react'
 import { Box } from '@mui/material'
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import Tooltip from '@mui/material/Tooltip';
+import { useRouter } from 'next/navigation';
 
 function Navbar({ session }) {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const router = useRouter()
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen)
@@ -20,7 +22,7 @@ function Navbar({ session }) {
                     <div className='flex justify-between items-center'>
                         <div>
                             {/* Adjusting the size of the logo with width and height */}
-                            <Box component='img' src='/img/taskgenda_logo.png' alt="Logo" className='w-32 h-auto' />
+                            <Box component='img' src='/img/taskgenda_logo.png' alt="Logo" onClick={() => (router.push('/'))} className='w-32 h-auto hover:cursor-pointer' />
                         </div>
                         <ul className='flex'>
                             {!session ? (
