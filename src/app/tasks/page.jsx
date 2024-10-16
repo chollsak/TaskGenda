@@ -87,6 +87,15 @@ function TasksPage() {
     router.push(`/task-detail/${taskId}`)
   }
 
+  const checkStatus = (status) => {
+    switch(status){
+      case 'in process':
+        return `text-yellow-600 font-semibold`
+      case 'success' :
+        return `text-green-600 font-semibold`
+    }
+  }
+
   return (
     <div className='mb-8'>
       {/* Navbar is always visible */}
@@ -119,7 +128,7 @@ function TasksPage() {
                     <h4 className="font-semibold hover:cursor-pointer hover:underline">{task.name}<span className='text-sm'> ({task._id})</span></h4>
                   </div>
                   <p>{task.description}</p>
-                  <p>Status: {task.status}</p>
+                  <p>  Status:<span className={`${checkStatus(task.status)}`}> {task.status}</span></p>
                   <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
                   <p>Due Date: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</p>
 
