@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -44,6 +44,35 @@ function TaskDetailPage() {
         status: '',
         dueDate: '',  // Added dueDate in the state
     });
+
+    const handleDelete = async (taskId) => {
+        try {
+            if (!confirm(`Are you sure you want to delete task id: ${taskId}?`)) {
+                return;
+            }
+
+            const resDelete = await fetch(`/api/task?taskId=${taskId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!resDelete.ok) {
+                throw new Error('Failed to delete task');
+            }
+
+            alert(`Task id: ${taskId} deleted!!`);
+
+            // Redirect to the tasks list after successful deletion
+            router.push('/tasks');
+
+        } catch (error) {
+            console.error('Error deleting task:', error);
+        }
+    };
+
+
 
     // Fetch task data when the component mounts
     useEffect(() => {
@@ -130,11 +159,21 @@ function TaskDetailPage() {
                         <p>{task.dateCreated}</p>
                         <p>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</p>
                         <p>{updatedTask.status || task.status}</p>
+                        {task && (
+                            <button
+                                onClick={() => handleDelete(task._id)}
+                                className="p-2 mt-5 mb-14 bg-red-500 text-white rounded-md"
+                            >
+                                Delete
+                            </button>
+                        )}
                     </div>
+
                 ) : (
                     <p>Task not found.</p>
                 )}
             </div>
+
 
             {/* Modal */}
             <Modal

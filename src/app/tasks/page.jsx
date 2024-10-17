@@ -6,6 +6,11 @@ import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Link from 'next/link';
 import LoadingComponent from '../components/Loading';
+import Card from '../components/Card';
+import Grid from '@mui/material/Grid';
+import { Box, Tooltip } from '@mui/material';
+import SplitscreenIcon from '@mui/icons-material/Splitscreen';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 function TasksPage() {
   const { data: session, status } = useSession();
@@ -89,27 +94,28 @@ function TasksPage() {
   }
 
   const checkStatus = (status) => {
-    switch(status){
+    switch (status) {
       case 'in process':
         return `text-yellow-600 font-semibold`
-      case 'success' :
+      case 'success':
         return `text-green-600 font-semibold`
     }
   }
 
   return (
-    <div className='mb-8'>
+    <div className='mb-8 '>
       {/* Navbar is always visible */}
       <Navbar session={session} />
 
       <div className="container mx-auto">
         <div className='flex justify-between'>
-          <h3 className="text-2xl font-bold my-4">Your Tasks</h3>
+          <h3 className="text-2xl font-bold my-4"><SplitscreenIcon className='-mt-1.5 mr-1'/>All Tasks</h3>
           <button
             onClick={() => { router.push('/add-task') }}
-            className="my-2 px-2 py-2 bg-green-500 text-white rounded-md"
+            className="my-3 px-2 bg-green-600 text-white rounded-md"
           >
-            Add New Task
+          <Tooltip title='Add Task'><AddBoxIcon/></Tooltip>
+           
           </button>
         </div>
 
@@ -121,33 +127,20 @@ function TasksPage() {
           <p>Error loading tasks: {error}</p>
         ) : tasks.length > 0 ? (
           /* Display tasks if they exist */
-          <ul>
-            {tasks.map((task) => (
-              <div className='flex justify-between'>
-                <li key={task._id} className="border-b w-full py-2">
-                  <div onClick={() => { handleTaskClick(task._id) }}>
-                    <h4 className="font-semibold hover:cursor-pointer hover:underline">{task.name}<span className='text-sm'> ({task._id})</span></h4>
-                  </div>
-                  <p>{task.description}</p>
-                  <p>  Status:<span className={`${checkStatus(task.status)}`}> {task.status}</span></p>
-                  <p>Date Created: {new Date(task.dateCreated).toLocaleDateString()}</p>
-                  <p>Due Date: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</p>
-
-                </li>
-                <button
-                  onClick={() => handleDelete(task._id)}
-                  className="p-2 mt-5 mb-14 bg-red-500 text-white rounded-md"
-                >
-                  Delete
-                </button>
-              </div>
-
-            ))}
-          </ul>
+          <Box>
+            <Grid container spacing={1} sx={{width:'78%'}}>
+              {tasks.map((task) => (
+                <Grid item xs={2.4} key={task._id}>  {/* Adjust the xs value to fit 5 cards per row */}
+                  <Card task={task} />  {/* Pass the task name to the Card component */}
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
         ) : (
           /* Display message if there are no tasks */
           <p>No tasks assigned.</p>
         )}
+
 
       </div>
     </div>
