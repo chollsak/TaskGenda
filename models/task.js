@@ -24,7 +24,7 @@ const taskSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['in process', 'success', 'pass due'], // Ensures status is one of these values
+    enum: ['in process', 'success', 'passed due'], // Ensures status is one of these values
     required: true,
     default: 'in process' // Default value for status
   }

@@ -54,7 +54,7 @@ function Navbar({ session }) {
                                 </>
                             ) : (
                                 <>
-                                    <Link href={'/welcome'} className='mx-3 flex hover:cursor-pointer text-blue-400'>
+                                    <Link href={'/dashboard'} className='mx-3 flex hover:cursor-pointer text-blue-400'>
                                         <DashboardIcon/>
                                         <Typography fontSize={'small'} className='mt-1'>DASHBOARD</Typography>
                                     </Link>

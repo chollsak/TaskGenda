@@ -17,7 +17,7 @@ function RegisterPage() {
   const {data: session} = useSession()
 
   if(session){
-    redirect('/welcome')
+    redirect('/dashboard')
   }
 
   const handleSubmit = async (e) => {

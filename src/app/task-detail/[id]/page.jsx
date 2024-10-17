@@ -138,7 +138,7 @@ function TaskDetailPage() {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className='flex items-center justify-center h-screen'><Box src='/img/loader.gif' className='w-40' component={'img'}/></div>;
     }
 
     return (

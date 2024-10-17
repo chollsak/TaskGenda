@@ -18,7 +18,7 @@ function LogInPage() {
     const router = useRouter()
 
     if(session){
-        router.push('/welcome')
+        router.push('/dashboard')
     }
 
     const handleSubmit = async (e) => {
@@ -36,7 +36,7 @@ function LogInPage() {
             }
 
             alert('Logged in')
-            router.push('/welcome')
+            router.push('/dashboard')
             
         } catch (error) {
             console.log(error)
