@@ -26,8 +26,8 @@ function Navbar({ session }) {
     }
 
     return (
-        <div className='mb-20'>
-            <nav className='bg-[#202124] text-white p-5 fixed top-0 left-0 w-full z-50'>
+        <div className='mb-24'>
+            <nav className='bg-white text-gray-600 p-5 fixed top-0 left-0 w-full z-50 border-b border-gray-300'>
                 <div className='container mx-auto'>
                     <div className='flex justify-between items-center'>
                         <div className='flex'>
