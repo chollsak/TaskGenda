@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Card from '../components/Card';
 import { Box } from '@mui/material';
+import LoadingComponent from '../components/Loading';
 
 function WelcomePage() {
   const { data: session, status } = useSession();
@@ -69,7 +70,7 @@ function WelcomePage() {
   }, [session?.user?.email, status]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><LoadingComponent/></div>;
   }
 
   if (error) {
@@ -79,7 +80,7 @@ function WelcomePage() {
   return (
     <div>
       <Navbar session={session} />
-      <div className="container mx-auto">
+      <div className="container mx-auto mb-10">
         <h5 className="text-3xl my-3">Welcome, {session?.user?.name}</h5>
         <p>Email: {session?.user?.email}</p>
         <hr className="my-3" />
